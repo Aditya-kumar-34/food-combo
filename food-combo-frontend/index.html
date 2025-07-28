@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Food Combo Generator</title>
+</head>
+<body>
+  <h1>🍱 Food Combo Generator</h1>
+  <label for="day">Select Day: </label>
+  <select id="day">
+    <option>Monday</option>
+    <option>Tuesday</option>
+    <option>Wednesday</option>
+  </select>
+  <button onclick="fetchCombos()">Get Combos</button>
+
+  <div id="results" style="margin-top:20px;"></div>
+
+  <script>
+    async function fetchCombos() {
+      const day = document.getElementById("day").value;
+      const res = await fetch(`http://localhost:5000/api/menu/${day}`);
+      const data = await res.json();
+
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+
+      data.forEach(combo => {
+        const comboBox = document.createElement("div");
+        comboBox.innerHTML = `
+          <h3>Combo #${combo.combo_id}</h3>
+          <p><strong>Main:</strong> ${combo.main}</p>
+          <p><strong>Side:</strong> ${combo.side}</p>
+          <p><strong>Drink:</strong> ${combo.drink}</p>
+          <p><strong>Total Calories:</strong> ${combo.total_calories}</p>
+          <p><strong>Popularity:</strong> ${combo.popularity_score}</p>
+          <p><strong>Taste Profile:</strong> ${combo.taste_profile}</p>
+          <p><em>Reason:</em> ${combo.reasoning}</p>
+          <hr/>
+        `;
+        container.appendChild(comboBox);
+      });
+    }
+  </script>
+</body>
+</html>
